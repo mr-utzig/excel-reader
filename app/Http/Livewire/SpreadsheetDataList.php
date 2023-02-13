@@ -2,24 +2,51 @@
 
 namespace App\Http\Livewire;
 
+use avadim\FastExcelWriter\Excel;
 use Livewire\Component;
 
 class SpreadsheetDataList extends Component
 {
-    protected $listeners = ['formData' => 'setFormData'];
+    protected $listeners = ['setProcessData' => 'setProcessData'];
 
-    public $arrRows = [];
-    public $arrHeader = [];
+    public $header = [];
+    public $dataList = [];
 
-
-    public function setFormData($data)
+    public function setProcessData($processData)
     {
-        $this->arrRows = $data["spreadsheetRows"];
-        $this->arrHeader = $data["spreadsheetHeader"];
+        $this->header = $processData["header"];
+        $this->dataList = $processData["dataList"];
     }
 
-    public function process()
+    public function downloadSpreadsheets()
     {
+        $excel = Excel::create(array_keys($this->dataList));
+        foreach ($this->dataList as $key => $list) {
+            $sheet = $excel->getSheet($key);
+            $sheet->writeHeader($this->header);
+
+            $arrLines = [];
+            $lines = explode(" - ", array_keys($list)[0]);
+            foreach ($lines as $line) {
+                $arrLines[] = explode(": ", $line)[1];
+            }
+
+            $arrItems = [];
+            foreach ($list as $items) {
+                $impItems  = implode(";", array_values($items)[0]);
+                $arrItems[] = $impItems;
+            }
+
+            $sheet->writeRow([
+                ...$arrLines,
+                ...$arrItems
+            ]);
+        }
+
+        $uniqid = uniqid(time());
+        $filePath = $excel->getTempFilePath("spreadsheet_reader_{$uniqid}.xlsx");
+
+        return response()->download($filePath);
     }
 
     public function render()

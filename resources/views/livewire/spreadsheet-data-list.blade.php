@@ -1,37 +1,36 @@
-<div class="mt-3">
-    @if ($arrHeader)
-    <form class="border border-2 rounded-2 p-3 bg-white" wire:submit.prevent="process">
-        <p class="text-start">Selecione as colunas que se repetem:</p>
-        <ul class="list-group flex-fill mt-1">
-            @foreach ($arrHeader as $index => $header)
-            <li class="list-group-item">
-                <input class="form-check-input me-1" type="checkbox" value="" id="repeatColumns{{ $index }}">
-                <label class="form-check-label stretched-link" for="repeatColumns{{ $index }}">{{ $header }}</label>
-            </li>
-            @endforeach
-        </ul>
-        <div class="d-flex justify-content-end mt-2">
-            <button type="submit" class="btn btn-success">Agora vai!</button>
+<div>
+    @if ($dataList)
+    <div class="border border-2 rounded-2 p-3 bg-white mt-3 mb-5">
+        <div class="d-flex justify-content-end mb-2">
+            <button type="button" wire:click="downloadSpreadsheets" class="btn btn-success">Baixar Planilhas</button>
         </div>
-    </form>
-    @endif
-
-    <!-- <div class="accordion accordion-flush" id="accordionFlushSpreadsheet">
-        @foreach ($arrRows as $index => $rows)
-        <div class="accordion-item">
-            <h2 class="accordion-header" id="flush-headingOne">
-                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-{{ $index }}" aria-expanded="false" aria-controls="flush-{{ $index }}">
-                    {{ $rows }}
-                </button>
-            </h2>
-            <div id="flush-{{ $index }}" class="accordion-collapse collapse" aria-labelledby="flush-heading{{ $index }}" data-bs-parent="#accordionFlushSpreadsheet">
-                <div class="accordion-body">
-                    <ul class="list-group">
-                        <li class="list-group-item">An item</li>
-                    </ul>
+        <div class="accordion">
+            @foreach ($dataList as $key => $list)
+            @foreach ($list as $label => $arrDataItems)
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="panelsStayOpen-{{ $key }}">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#flush-{{ $key }}" aria-expanded="false" aria-controls="flush-{{ $key }}">
+                        {{ $label }}
+                    </button>
+                </h2>
+                <div id="flush-{{ $key }}" class="accordion-collapse collapse"
+                    aria-labelledby="flush-heading{{ $key }}">
+                    <div class="accordion-body">
+                        @foreach ($arrDataItems as $group => $items)
+                        <p class="text-start mb-1">{{ $group }}:</p>
+                        <ul class="list-group">
+                            @foreach ($items as $item)
+                            <li class="list-group-item">{{ $item }}</li>
+                            @endforeach
+                        </ul>
+                        @endforeach
+                    </div>
                 </div>
             </div>
+            @endforeach
+            @endforeach
         </div>
-        @endforeach
-    </div> -->
+    </div>
+    @endif
 </div>

@@ -25,8 +25,6 @@ class UploadSpreadsheetForm extends Component
             $this->arrSpreadsheetHeader = array_shift($arrData);
         }
 
-        // dd($this->arrSpreadsheetHeader);
-
         $this->emit("formData", [
             "spreadsheetRows" => $arrData,
             "spreadsheetHeader" => $this->arrSpreadsheetHeader
